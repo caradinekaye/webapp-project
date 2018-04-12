@@ -1,0 +1,46 @@
+{"projects":
+  [
+    {
+      "ProjectID":"1",
+      "Name":"Scaffolding and Painting",
+      "BuildingID":"123",
+      "Status":"closed",
+      "StartDate":"2016-12-12T00:00:00",
+      "EndDate":"2016-12-14T00:00:00",
+      "ContactPerson":"Joe Biggs",
+      "ProjectManager":"Sally Smith",
+      "Contractor":"ABC Company",
+      "Works":
+        [
+          {"TypeOfWork":"Scaffolding", "Status":"Done"},
+          {"TypeOfWork":"Painting", "Status":"On-going"}
+        ],
+      "Comments":
+        [
+          {"Author":"Johnny Guitar", "Text":"Work completed."},
+          {"Author":"John Doe", "Text":"Problem detected."}
+        ]
+    },
+    {
+      "ProjectID":"2",
+      "Name":"Painting",
+      "BuildingID":"222",
+      "Status":"current",
+      "StartDate":"2016-12-12T00:00:00",
+      "EndDate":"2017-12-14T00:00:00",
+      "ContactPerson":"Joe Biggs",
+      "ProjectManager":"Sally Smith",
+      "Contractor":"ABC Company",
+      "Works":
+        [
+          {"TypeOfWork":"Painting", "Status":"On-going"}
+        ],
+      "Comments":
+        [
+          {"Author":"Johnny Guitar", "Text":"Work completed."},
+          {"Author":"John Doe", "Text":"Problem detected."}
+        ]
+    }
+    
+  ]
+}

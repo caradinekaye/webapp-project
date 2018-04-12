@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html ng-app="plunker">
+
+  <head>
+    <meta charset="utf-8" />
+    <title>AngularJS Plunker</title>
+    <script>document.write('<base href="' + document.location + '" />');</script>
+    <link rel="stylesheet" href="style.css" />
+    <script data-require="angular.js@1.4.x" src="https://code.angularjs.org/1.4.12/angular.js" data-semver="1.4.9"></script>
+    <script src="app.js"></script>
+  </head>
+
+  <body ng-controller="MainCtrl">
+  
+  <!-- ===================================================================== -->
+  <!-- == LOGIN PAGE ======================================================= -->
+  <!-- ===================================================================== -->
+  
+  <div class="loginPage" ng-show="loginPage">
+    
+    <div class="header">
+      <h1> happy <span class="b">buildings</span>. </h1>
+    </div>
+
+    <div class="loginForms">
+  
+      <div class="form-1" ng-show="loginShow">
+        
+        <h4> Please enter your details below to continue. </h4>
+        
+        <p> Enable login for: 
+          <select name="usertype" value="UserType" class="loginSelect" ng-model="usertype" form="loginForm">
+            <option value="owner"> Owner </option>
+            <option value="manager"> Manager </option>
+            <option value="contractor"> Contractor </option>
+          </select> </p>
+        
+        <form name="loginForm">
+            
+            <input type="text" class="loginInput" ng-model="username" name="username" placeholder="Username"> <br>
+            <input type="password" class="loginInput" ng-model="password" name="password" placeholder="Password"> <br>
+            
+            <input type="submit" class="loginSubmit" value="Login" ng-hide="usertype" ng-click="ownerLogin()">
+            <input type="submit" class="loginSubmit" value="Login" ng-show="usertype == 'owner'" ng-click="ownerLogin()">
+            <input type="submit" class="loginSubmit" value="Login" ng-show="usertype == 'manager'" ng-click="managerLogin()">
+            <input type="submit" class="loginSubmit" value="Login" ng-show="usertype == 'contractor'" ng-click="contractorLogin()">
+            
+            <input type="submit" class="loginButtons" name="cancel" value="Reset Fields" ng-click="loginCancel()">
+            <input type="submit" class="loginButtons" name="forgotpassword" value="Forgot Password" ng-click="loginReset()">
+            
+            <p ng-bind="loginFeedback"> </p>
+        </form>
+      </div> <!-- LOGIN FORM END -->
+      
+      <div class="form-1" ng-show="resetShow">
+        <form name="ForgotPass">
+            <p> Please enter your email address and we'll send you instructions on how to reset your password. </p>
+            <input type="email" class="loginInput" ng-model="email" name="email" placeholder="Email Address" > <br>
+            
+            <input type="submit" class="loginSubmit" name="submit" value="Submit" ng-click="resetSubmit()">
+            <input type="submit" class="loginButtons" name="cancel" value="Back" ng-click="resetCancel()">
+            
+            <p ng-bind="resetFeedback"> </p>
+        </form>
+      </div> <!-- FORGOT PASSWORD FORM END -->
+    
+    </div> <!-- LOGIN FORMS END -->
+  
+  </div> <!-- LOGIN PAGE END -->
+  
+  <!-- ===================================================================== -->
+  <!-- == LOGIN SUCCESSFUL HOME PAGE  ====================================== -->
+  <!-- ===================================================================== -->
+  
+  <div class="loginPage" ng-show="homePage">
+    
+    <div class="header">
+      <h1> happy <span class="b">buildings</span>. </h1>
+    </div>
+
+    <div class="loginForms">
+      <div class="form-1" ng-show="homePage">
+        <p id="loginSuccess"> You have logged in successfully as <span class="b">{{ usertype }}</span>!
+        <br> <br>
+        &rArr; <button type="button" id="loginDirectory" class="navbutton" name="goDirectory" ng-click="goDirectory()"> Building Directory </button>
+        </p>
+      </div> <!-- LOGIN SUCCESSFUL NOTIFICATION -->
+    </div>
+  
+  </div>
+  
+  <!-- ===================================================================== -->
+  <!-- == BUILDING DIRECTORY PAGE  ========================================= -->
+  <!-- ===================================================================== -->
+    
+  <div class="page" ng-show="directoryPage"> <!-- BUILDING DIRECTORY PAGE START -->
+    
+    <div class="header">
+      <h1> happy <span class="b">buildings</span>. </h1>
+      
+      <div class="navbar">
+        <ul>
+           <li> <button type="button" class="navbutton" name="goDirectory" ng-click="goDirectory()"> Building Directory </button> </li>
+           <li> <button type="button" class="navbutton" name="goSchedule" ng-click="goSchedule()" ng-disabled="usertype != 'manager'"> Project Schedule </button> </li>
+           <li> <button type="button" class="navbutton" name="goContact" ng-click="goContact()"> Contact </button> </li>
+           <li> <button type="button" class="navbutton" name="goLogout" ng-click="goLogout()"> Logout </button> </li>
+         </ul>
+      </div> <!-- NAV BAR END -->
+
+    </div> <!-- HEADER END -->
+    
+    <div ng-show="directoryShow"> <!-- SHOW BUILDING DIRECTORY START -->
+      
+      <h2> Building Directory </h2>
+    
+      <div class="divider">
+        <table class="tableheader">
+            <tr> 
+              <td class="tabletitle"> Building Directory List </td>
+              <td class="tablebutton"> <input type="text" class="searchInput" ng-model="searchBuilding.$" placeholder="Search"> </td> <!-- Can also do "searchBuilding.Address" to filter searchbox to Address only ".$" to search for a string -->
+              <td class="tablebutton"> <button type="button" class="tablebutton1" name="addBuilding" ng-click="addBuilding()" ng-disabled="usertype != 'manager'"> + Building </button> </td>
+            </tr>
+        </table>
+      </div>
+      
+      <div class="tablePadding">
+        <table class="table">
+          <tr>
+            <th> </th>
+            <th> ID </th>
+            <th> Owner </th>
+            <th> Address </th>
+            <th> </th>
+          </tr>
+            
+          <tr ng-repeat="building in buildingData | filter: searchBuilding">
+            <td> {{ $index + 1 }} </td>
+            <td> {{ building.ID }} </td>
+            <td> {{ building.Owner }} </td>
+            <td> {{ building.Address }} </td>
+            <td>  <button type="button" class="actionButtons" name="viewBuilding" ng-click="setSelectedBuilding(building)"> View &#9656; </button>
+                  <button type="button" class="actionButtons" name="deleteBuilding" ng-click="deleteBuilding($index)" ng-disabled="usertype != 'manager'" ng-hide="usertype != 'manager'"> Delete </button> </td>
+          </tr>
+        </table>
+      </div>
+        
+      <p ng-bind="buildingServer"> </p>
+          
+    </div> <!-- SHOW BUILDING DIRECTORY END -->
+    
+    <div ng-show="buildingShow"> <!-- ADD BUILDING PAGE START -->
+      
+      <h2> Building Directory </h2>
+    
+      <div class="divider">
+        <table class="tableheader">
+            <tr> 
+              <td class="tabletitle"> Building Directory: Add Building </td>
+              <td class="tablebutton"> <button type="button" class="tablebutton1" name="backbutton1" ng-click="buildingCancel()"> Back </button> </td>
+            </tr>
+        </table>
+      </div>
+    
+      <div class="addForms"> <!-- ADD BUILDING FORM START -->
+        <form id="addBuilding">
+          <table class="forms">
+            <tr>
+              <th> ID </th>
+              <td> <input type="text" class="formInput" ng-model="buildingID" name="buildingID" placeholder="ID"> </td>
+            </tr>
+            
+            <tr>
+              <th> Owner </th>
+              <td> <input type="text" class="formInput" ng-model="buildingOwner" name="buildingOwner" placeholder="Full Name" required> </td>
+            </tr>
+            
+            <tr>
+              <th> Address </th>
+              <td> <input type="text" class="formInput" ng-model="buildingAddress" name="buildingAddress" placeholder="Street Address" required> </td>
+            </tr>
+            
+            <tr>
+              <th> Type </th>
+              <td> <select name="buildingType" class="formSelect" ng-model="buildingType" form="addbuilding">
+                <option value="boardinghouse"> Boarding house </option>
+                <option value="commercial"> Commercial </option>
+                <option value="cultural"> Cultural </option>
+                <option value="education"> Education </option>
+                <option value="health"> Hospital, nursing homes, or other health buildings </option>
+                <option value="hotel"> Hotel, hostel, or motel </option>
+                <option value="industrial"> Industrial </option>
+                <option value="social"> Museums, art galleries or libraries </option>
+                <option value="religious"> Religious </option>
+                <option value="sports"> Sports facilities </option>
+              </select> </td>
+            </tr>
+            
+            <tr>
+              <th> Construction Date </th>
+              <td> <input type="date" class="formInput" ng-model="buildingDate" name="buildingDate"> </td>
+            </tr>
+            
+            </table>
+              
+            <input type="submit" name="submit" class="formButton" value="Submit" ng-click="buildingSubmit()">
+            <input type="submit" name="reset" class="formButton" value="Reset Fields" ng-click="buildingReset()">
+            
+        </form>
+        
+      </div> <!-- ADD BUILDING FORM END -->
+    
+    </div> <!-- ADD BUILDING PAGE END -->
+    
+    <div ng-show="buildingInfo"> <!-- VIEW BUILDING INFORMATION START -->
+      
+      <div>
+        <h2> Building Directory </h2>
+      
+        <div class="divider">
+          <table class="tableheader">
+              <tr> 
+                <td class="tabletitle"> Building Information: View </td>
+                <td class="tablebutton"> <button type="button" class="tablebutton1" name="backbutton2" ng-click="buildingBack()"> Back </button> </td>
+              </tr>
+          </table>
+        </div>
+      </div> <!-- BUILDING INFORMATION HEADER -->
+      
+      <div class="divider"> <!-- BUILDING INFORMATION CONTENT START -->
+      
+        <div class="left"> <!-- LEFT SECTION START -->
+        
+          <div class="divider"> <!-- BUILDING DETAILS START -->
+            <table class="tableheader2">
+              <tr>
+                <td class="tabletitle1"> Building ID: {{ selectedBuilding.ID }} </td>
+                <td class="tablebutton">  <button type="button" class="tablebutton2" ng-click="editBuilding(building)" ng-disabled="usertype != 'manager'" ng-hide="building.editable"> Edit </button>
+                                          <button type="button" class="tablebutton2" ng-click="saveBuilding(building)" ng-disabled="usertype != 'manager'" ng-show="building.editable"> Save </button>
+                                          </td>
+              </tr>
+            </table>
+            
+            <table class="buildingInformation">
+              <tr>
+                <th> Owner </th>
+                <td>  <input type="text" ng-model="selectedBuilding.Owner" ng-show="building.editable">
+                      <span ng-hide="building.editable"> {{ selectedBuilding.Owner }} </span>
+                </td>
+              </tr>
+                
+              <tr>
+                <th> Address </th> 
+                <td> {{ selectedBuilding.Address }} </td>
+              </tr>
+              
+              <tr>
+                <th> Type </th> 
+                <td> {{ selectedBuilding.BuildingType }} </td>
+              </tr>
+              
+              <tr>
+                <th> Construction Date </th> 
+                <td> {{ selectedBuilding.ConstructionDate }} </td>
+              </tr>
+              
+              <tr>
+                <th> Projects </th>
+                <td>  <button type="button" class="tablebutton2" ng-click="showProjects(selectedBuilding.ID)"> View &#9656; </button>
+                      <button type="button" class="tablebutton2" ng-click="showProjectsArray()"> &#9679; </button></td>
+              </tr>
+            </table>
+            
+          </div> <!-- BUILDING DETAILS END -->
+          
+          <div class="divider"> <!-- PROJECT LIST START -->
+            <table class="tableheader2">
+              <tr>
+                <td class="tabletitle1"> Project List </td>
+                <td class="tablebutton"> <button type="button" name="addProject" class="tablebutton2" ng-click="addProject()" ng-disabled="usertype != 'manager'"> + Project </button> </td>
+              </tr>
+            </table>
+            
+            <table class="table" ng-show="projectTable">
+              <tr>
+                <th> P-ID </th>
+                <th> B-ID </th>
+                <th> Name </th>
+                <th> Status </th>
+                <th> </th>
+                <th> </th>
+              </tr>
+              
+              <tr>
+                <td> {{ currentProject.ProjectID }} </td>
+                <td> {{ currentProject.BuildingID }} </td>
+                <td> {{ currentProject.Name }} </td>
+                <td> 
+                  <select name="pstatus" ng-model="currentProject.Status" ng-show="currentProject.editable">
+                    <option value="Closed"> Closed </option>
+                    <option value="Current"> Current </option>
+                    <option value="Scheduled"> Scheduled </option>
+                    <option value="Unscheduled"> Unscheduled </option>
+                  </select>
+                  
+                  <span ng-hide="currentProject.editable"> {{ currentProject.Status }} </span>
+                </td>
+                <td>  <button type="button" class="actionButtons" ng-click="setSelectedBuildingproject(project)"> View &#9656; </button>
+                      <button type="button" class="actionButtons" ng-click="deleteProject(currentProject)" ng-hide="usertype != 'manager'"> Delete </button> </td>
+                <td>  <button type="button" class="actionButtons" ng-show="signalProject" ng-click="signalled()"> Signal </button>
+                      <button type="button" class="actionButtons" ng-show="signalAlert" ng-click="unsignalled()"> <img src="http://i.imgur.com/6khLzzp.png" class="viewIcon"> Priority </button> 
+                </td>
+              </tr>
+            </table>
+          
+            <table class="table" ng-show="projectTable2">  <!-- EXAMPLE VIEW 2 PROJECTS ARRAY -->
+              <tr>
+                <th> P-ID </th>
+                <th> B-ID </th>
+                <th> Name </th>
+                <th> Status </th>
+                <th> <button type="button" class="tablebutton2" ng-disabled="usertype != 'manager'" ng-click="addProjectX()"> + Project </button> </th>
+              </tr>
+                
+              <tr ng-repeat="project in projectData track by $index">
+                <td>  <input type="text" class="editInput" ng-model="project.ProjectID" ng-show="project.editable">
+                      <span ng-hide="project.editable"> {{ project.ProjectID }} </span>
+                </td>
+                
+                <td> <input type="text" class="editInput" ng-model="project.BuildingID" ng-show="project.editable">
+                      <span ng-hide="project.editable"> {{ project.BuildingID }} </span></td>
+                
+                <td>  <input type="text" ng-model="project.Name" ng-show="project.editable">
+                     <span ng-hide="project.editable">{{ project.Name }}</span>
+                </td>
+                  
+                <td>  <select name="pstatus" class="editInput" ng-model="project.Status" ng-show="project.editable">
+                        <option value="Closed"> Closed </option>
+                        <option value="Current"> Current </option>
+                        <option value="Scheduled"> Scheduled </option>
+                        <option value="Unscheduled"> Unscheduled </option>
+                      </select>
+                  
+                <span ng-hide="project.editable"> {{ project.Status }} </span> </td>
+                <td>  <span class="actionButtons" ng-click="editProjectX($index)" ng-disabled="usertype != 'manager'" ng-hide="project.editable"> Edit </span>
+                      <span class="actionButtons" ng-click="saveProjectX($index)" ng-disabled="usertype != 'manager'" ng-show="project.editable"> Save </span> |
+                      <span class="actionButtons" ng-disabled="usertype != 'manager'" ng-click="deleteProjectX($index)"> Delete </span> </td>
+              </tr>
+            </table>
+            
+          </div> <!-- PROJECT LIST END -->
+        
+        </div> <!-- LEFT SECTION END -->
+        
+        <div class="right">
+      
+          <div ng-show="buildingprojectInfo">
+            
+            <div class="divider"> <!-- PROJECT INFORMATION START -->
+              <table class="tableheader2">
+                <tr>
+                  <td class="tabletitle1"> Project Information </td>
+                </tr>
+              </table>
+                
+              <table class="buildingInformation">
+                <tr>
+                  <th> Project ID </th>
+                  <td> {{ currentProject.ProjectID }} </td>
+                </tr>
+                      
+                <tr>
+                  <th> Building ID </th>
+                  <td> {{ currentProject.BuildingID }}</td>
+                </tr>
+                
+                <tr>
+                  <th> Project Status </th>
+                  <td> {{ currentProject.Status }} </td>
+                </tr>
+                      
+                <tr>
+                  <th> Start Date </th>
+                  <td> {{ currentProject.StartDate}} </td>
+                </tr>
+                
+                <tr>
+                  <th> End Date </th>
+                  <td> {{ currentProject.EndDate }} </td>
+                </tr>
+                      
+                <tr>
+                  <th> Contact Person </th>
+                  <td> {{ currentProject.ContactPerson }} </td>
+                </tr>
+                
+                <tr>
+                  <th> Project Manager </th>
+                  <td> {{ currentProject.ProjectManager }} </td>
+                </tr>
+                
+                <tr>
+                  <th> Contractor </th>
+                  <td> {{ currentProject.Contractor }} </td>
+                </tr>
+              </table>
+            </div> <!-- PROJECT INFORMATION END -->
+            
+            <div class="divider"> <!-- WORK INFORMATION START -->
+              <table class="tableheader2">
+                <tr>
+                  <td class="tabletitle1"> Work Information </td>
+                  <td class="tablebutton"> <button type="button" name="addWork" class="tablebutton2" ng-click="addWork()" ng-disabled="usertype != 'manager'"> Add Work </button> </td>
+                </tr>
+              </table>
+                  
+              <table class="table">
+                <tr>
+                  <th> Type of Work </th>
+                  <th> Status </th>
+                  <th> </th>
+                </tr>
+                    
+                <tr ng-repeat="works in currentProject.Works">
+                  <td>
+                    <select name="worktype" class="editInput" ng-model="works.TypeOfWork" ng-show="works.editable">
+                      <option value="Alterations"> Alterations </option>
+                      <option value="Electrical Renovation"> Electrical Renovation </option>
+                      <option value="Modernising"> Modernising </option>
+                      <option value="Painting"> Painting </option>
+                      <option value="Plumbing "> Plumbing </option>
+                      <option value="Scaffolding"> Scaffolding </option>
+                      <option value="Weather Tigthening"> Weather Tightening </option>
+                    </select>
+                    
+                    <span ng-hide="works.editable"> {{ works.TypeOfWork }} </span>
+                  </td>
+                  
+                  <td> 
+                    <select name="workstatus" class="editInput" ng-model="works.Status" ng-show="works.editable">
+                      <option value="Done"> Done </option>
+                      <option value="On-going"> On-going </option>
+                      <option value="Scheduled"> Scheduled </option>
+                      <option value="Postponed"> Postponed </option>
+                      <option value="Cancelled"> Cancelled </option>
+                    </select>
+                    
+                    <span ng-hide="works.editable"> {{ works.Status }} </span>
+                  </td>
+                  
+                  <td>  <span class="actionButtons" ng-disabled="usertype != 'manager'" ng-click="edit($index)" ng-hide="works.editable || usertype != 'manager'"> Edit </span>
+                        <span class="actionButtons" ng-disabled="usertype != 'manager'" ng-click="save($index)" ng-show="works.editable" ng-hide="usertype !='manager'"> Save </span>
+                        <span class="actionButtons" ng-disabled="usertype != 'manager'" ng-hide="usertype != 'manager'" ng-click="delete($index)"> Delete </span>
+                  </td>
+                </tr>
+              </table>
+              
+            </div> <!-- WORK INFORMATION END -->
+                  
+            <div class="divider"> <!-- COMMENT START -->
+              <table class="tableheader2">
+                <tr>
+                  <td class="tabletitle1"> Comments </td>
+                </tr>
+              </table>
+            
+            <table class="buildingInformation">
+              <tr>
+                <th> Author </th>
+                <th> Comment </th>
+                <th> </th>
+                
+              </tr>
+              <tr ng-repeat="comments in currentProject.Comments">
+                <th> {{ comments.Author }} </th>
+                <td> "{{ comments.Text }}" </td>
+                <td> <span class="actionButtons" ng-disabled="usertype != 'manager'" ng-click="deleteComment($index)"> Delete </span> </td>
+              </tr>
+              
+              <tr ng-repeat="comment in comments track by $index">
+                <th> {{ comment.Author }} </th>
+                <td> "{{ comment.Text }}" </td>
+                <td> <span class="actionButtons" ng-disabled="usertype != 'manager'" ng-click="deleteComment($index)"> Delete </span> </td>
+              </tr>
+            </table>
+              
+              <div class="commentDiv">
+                
+                <p class="b"> Enter your comment below. </p>
+                
+                <form ng-submit="submitComment()">
+                  <table class="buildingInformation">
+                    <tr>
+                      <th> Author </th>
+                      <td> <input class="formInput" type="text" name="commentAuthor" ng-model="aComment.Author" placeholder="Full Name" required> </td>
+                    </tr>
+                    
+                    <tr>
+                      <th> Comment </th>
+                      <td> <input class="formInput" type="text" name="comment" ng-model="aComment.Text" placeholder="Enter your comment here."> </td>
+                    </tr>
+                  </table>
+                  
+                  <div class="addForms">
+                    <input type="submit" class="formButton" value="Add Comment">
+                  </div>
+                </form>
+                
+              </div>
+        
+            </div> <!-- COMMENT END -->
+            
+          </div> <!-- PROJECT INFORMATION PAGE END -->  
+          
+        </div> <!-- RIGHT SECTION END -->
+        
+      </div> <!-- BUILDING INFORMATION CONTENT END -->
+      
+    </div> <!-- BUILDING INFORMATION PAGE END -->
+    
+    <div ng-show="projectShow"> <!-- ADD BUILDING FORM PAGE START -->
+      
+      <h2> Building Information </h2>
+    
+      <div class="divider">
+          <table class="tableheader">
+              <tr> 
+                <td class="tabletitle"> Building Information: Add Project </td>
+                <td class="tablebutton"> <button type="button" class="tablebutton1" name="backbutton2" ng-click="projectCancel()"> Back </button> </td>
+              </tr>
+          </table>
+      </div>
+      
+      <div class="addForms">
+        <form id="addproject">
+          <table class="forms">
+            <tr>
+              <th> Name </th>
+              <td> <input type="text" ng-model="pname" class="formInput" name="pname" required></td>
+            </tr>
+            
+            <tr>
+              <th> Start Date </th>
+              <td> <input type="date" ng-model="psdate" class="formInput" name="psdate" required> </td>
+            </tr>
+  
+            <tr>
+              <th> Finish Date </th>
+              <td> <input type="date" ng-model="pfdate" class="formInput" name="pfdate" required> </td>
+            </tr>
+            
+            <tr>
+              <th> Project Status </th>
+              <td>  <select name="pstatus" class="formSelect" form="addproject">
+                      <option value="Closed"> Closed </option>
+                      <option value="Current"> Current </option>
+                      <option value="Scheduled"> Scheduled </option>
+                      <option value="Unscheduled"> Unscheduled </option>
+                    </select>
+              </td>
+            </tr>
+              
+            <tr>
+              <th> Project Manager </th>
+              <td> <input type="text" ng-model="pmanager" class="formInput" name="pmanager" required> </td>
+            </tr>
+            
+            <tr>
+              <th> Contact Person </th>
+              <td> <input type="text" ng-model="pcontact" class="formInput" name="pcontact" required> </td>
+            </tr>
+              
+            <tr>
+              <th> Contractor </th>
+              <td> <input type="text" ng-model="pcontractor" class="formInput" name="pcontractor" required> </td>
+            </tr>
+          
+          </table>
+          
+          <input type="submit" name="submit" class="formButton" value="Submit">
+          <input type="submit" name="cancel" class="formButton" value="Reset Fields" ng-click="projectReset()">
+          
+        </form>
+      </div>
+    </div> <!-- ADD PROJECT FORM PAGE END -->
+  
+  </div> <!-- BUILDING DIRECTORY PAGE END -->
+  
+  <!-- ===================================================================== -->
+  <!-- == PROJECT SCHEDULE PAGE ============================================ -->
+  <!-- ===================================================================== -->
+  
+  <div class="page" ng-show="schedulePage"> <!-- PROJECT SCHEDULE PAGE START -->
+    
+    <div class="header">
+      
+      <h1> happy <span class="b">buildings</span>. </h1>
+      
+        <div class="navbar">
+          <ul>
+             <li> <button type="button" class="navbutton" name="goDirectory" ng-click="goDirectory()"> Building Directory </button> </li>
+             <li> <button type="button" class="navbutton" name="goSchedule" ng-click="goSchedule()" ng-disabled="usertype != 'manager'"> Project Schedule </button> </li>
+             <li> <button type="button" class="navbutton" name="goContact" ng-click="goContact()"> Contact </button> </li>
+             <li> <button type="button" class="navbutton" name="goLogout" ng-click="goLogout()"> Logout </button> </li>
+           </ul>
+        </div> <!-- NAV BAR END -->
+
+    </div> <!-- HEADER END -->
+    
+    <div ng-show="scheduleShow"> <!-- SHOW PROJECT SCHEDULE START -->
+    
+      <h2> Project Schedule </h2>
+      
+        <div class="divider">
+          <table class="tableheader">
+              <tr> 
+                <td class="tabletitle"> Project Information </td>
+                <td class="tablebutton"> <input type="text" class="searchInput" ng-model="searchProject.$" placeholder="Search"> </td> <!-- Can also do "searchBuilding.Address" to filter searchbox to Address only ".$" to search for a string -->
+              </tr>
+          </table>
+        </div>
+    
+      <div> <!-- PROJECT SCHEDULE TABLE START -->
+        <table class="table">
+          <tr>
+            <th> ID </th>
+            <th> Building ID </th>
+            <th> Name </th>
+            <th> Project Status </th>
+            <th> Start Date </th>
+            <th> End Date </th>
+            <th> </th>
+          </tr>
+          
+          <tr ng-repeat="project in projectData | filter: searchProject">
+            <td> {{ project.ProjectID }} </td>
+            <td> {{ project.BuildingID }} </td>
+            <td> {{ project.Name}} </td>
+            <td> {{ project.Status }} </td>
+            <td> {{ project.StartDate }} </td>
+            <td> {{ project.EndDate }} </td>
+            <td> <button type="button" class="actionButtons" name="viewProject" ng-click="setSelectedProject(project)"> View &#9656; </button> </td>
+          </tr>
+        </table>
+        
+        <p ng-bind="projectServer"> </p> <!-- Notification -->
+      
+      </div> <!-- PROJECT SCHEDULE TABLE START -->
+    
+    </div> <!-- SHOW PROJECT SCHEDULE END -->
+    
+    <div ng-show="projectInfo"> <!-- SHOW PROJECT INFO START -->
+    
+
+      <div>
+        <h2> Project Schedule </h2>
+      
+        <div class="divider">
+          <table class="tableheader">
+              <tr> 
+                <td class="tabletitle"> Project Information: View </td>
+                <td class="tablebutton"> <button type="button" class="tablebutton1" name="backbutton2" ng-click="projectBack()"> Back </button> </td>
+              </tr>
+          </table>
+        </div>
+      </div> <!-- PROJECT INFORMATION HEADER -->
+      
+        <table class="tableheader2">
+              <tr>
+                <td class="tabletitle1"> Project ID: {{ selectedProject.ProjectID }} </td>
+              </tr>
+        </table>
+      
+        <table class="buildingInformation">
+          <tr>
+            <th> Building ID </th>
+            <td> {{ selectedProject.BuildingID }}</td>
+          </tr>
+          <tr>
+            <th> Project Status </th>
+            <td> {{ selectedProject.Status }} </td>
+          </tr>
+          <tr>
+            <th> Start Date </th>
+            <td> {{ selectedProject.StartDate}} </td>
+          </tr>
+          <tr>
+            <th> End Date </th>
+            <td> {{ selectedProject.EndDate }} </td>
+          </tr>
+          <tr>
+            <th> Contact Person </th>
+            <td> {{ selectedProject.ContactPerson }} </td>
+          </tr>
+          <tr>
+            <th> Project Manager </th>
+            <td> {{ selectedProject.ProjectManager }} </td>
+          </tr>
+          <tr>
+            <th> Contractor </th>
+            <td> {{ selectedProject.Contractor }} </td>
+          </tr>
+        </table>
+      
+      <br>
+      <br>
+      
+        <table class="tableheader2">
+              <tr>
+                <td class="tabletitle1"> Work </td>
+              </tr>
+        </table>
+     
+          <table class="buildingInformation">
+            <tr>
+              <th> Type of Work </th>
+              <th> Status </th>
+            </tr>
+            <tr ng-repeat="works in selectedProject.Works">
+              <td> {{ works.TypeOfWork }} </td>
+              <td> {{ works.Status }} </td>
+            </tr>
+          </table>
+          
+      <br>
+      <br>
+          
+        <div>
+        <table class="tableheader2">
+              <tr>
+                <td class="tabletitle1"> Commments </td>
+              </tr>
+        </table>
+            
+            <ul ng-repeat="comments in selectedProject.Comments">
+              <li>
+                 "{{ comments.Text }}" - {{ comments.Author }} 
+              </li>
+            </ul>
+        </div> <!-- COMMENT AREA END -->
+      
+    </div> <!-- PROJECT INFORMATION -->  
+    
+  </div> <!-- PROJECT SCHEDULE PAGE END -->
+
+  <!-- ===================================================================== -->
+  <!-- == CONTACT ========================================================== -->
+  <!-- ===================================================================== -->
+    
+  <div class="page" ng-show="contactPage">
+    
+    <div class="header">
+      
+      <h1> happy <span class="b">buildings</span>. </h1>
+      
+        <div class="navbar">
+          <ul>
+             <li> <button type="button" class="navbutton" name="goDirectory" ng-click="goDirectory()"> Building Directory </button> </li>
+             <li> <button type="button" class="navbutton" name="goSchedule" ng-click="goSchedule()" ng-disabled="usertype != 'manager'"> Project Schedule </button> </li>
+             <li> <button type="button" class="navbutton" name="goContact" ng-click="goContact()"> Contact </button> </li>
+             <li> <button type="button" class="navbutton" name="goLogout" ng-click="goLogout()"> Logout </button> </li>
+           </ul>
+        </div> <!-- NAV BAR END -->
+
+    </div> <!-- HEADER END -->
+    
+    <div>
+      <h2> Contact </h2>
+      
+      <div class="divider">
+        <table class="tableheader">
+            <tr> 
+              <td class="tabletitle"> Feedback </td>
+            </tr>
+        </table>
+      </div>
+    </div> <!-- PROJECT SCHEDULE HEADER -->
+    
+    
+    <div class="addForms">
+      <form name="feedback">
+        <table class="forms">
+          <tr>
+            <th> Category </th>
+            <td>  <select name="fbcategory" class="formInput" form="feedback">
+                    <option value="report"> Report a problem </option>
+                    <option value="request"> Request a new feature </option>
+                    <option value="share"> Share a positive feedback </option>
+                    <option value="others"> Other </option>
+                  </select></td>
+          </tr>
+          
+          <tr>
+            <th> Details </th>
+            <td> <textarea name="contactFeedback" ng-model="contactFeedback" ng-minlength="25" rows="10" cols="50" placeholder="Enter details of your feedback here."> </textarea> </td>
+          </tr>
+        </table>
+      </form>
+  
+      <input type="submit" name="submit" class="formButton" value="Submit" ng-click="feedbackSubmit()">
+      <input type="submit" name="cancel" class="formButton" value="Cancel" ng-click="feedbackCancel()">
+      
+      <p ng-if="!feedback.contactFeedback.$valid"> Please enter a feedback at least 25 characters. </p>
+          
+    </div> <!-- SUBMIT FEEDBACK FORM END -->
+    
+  </div> <!-- CONTACT PAGE END -->
+  
+  </body>
+
+</html>

@@ -1,0 +1,427 @@
+/* Put your css in here */
+
+html	{
+	width: 100%;
+	height: 100%;
+}
+
+body {
+  font-family: trebuchet MS;
+  font-size: 14px;
+  text-align: justify;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: auto;
+}
+
+/* LOGIN PAGE */
+
+/* Header */
+
+.header {
+  margin: 0 auto;
+}
+
+h1 {
+  color: #4EC17C;
+  font-family: helvetica;
+  font-size: 24px;
+  letter-spacing: 2px;
+  text-align: center;
+}
+
+.b {
+  color: #F7B733;
+}
+
+/* Login DIVS including login & forgot password form */
+
+.loginPage {
+  background-image: url(http://i.imgur.com/RGITPpi.png);
+  background-position: center center;
+	background-repeat: repeat-x;
+	background-attachment: fixed;
+	background-size: auto 100%;
+	background-color: white;
+	max-width: 100%;
+	max-height: 100%;
+	width: 100%;
+	height: 100%;
+	padding: 50px 10px 10px 10px;
+	position: fixed;
+}
+
+.loginForms { /* For Login & Forgot Password Container */
+  color: black;
+  margin: 0 auto;
+  text-align: center;
+	padding-top: 30px; /* top, right, bottom, left */
+  width: 450px;
+  position: relative;
+}
+
+.form-1 {
+  max-width: 70%;
+  display: inline-block;
+}
+
+.loginInput { /* Input text fields for login page */
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #CCCCCC;
+  box-sizing: border-box;
+  margin-bottom: 10px;
+  outline: none;
+  padding: 10px;
+  width: 300px;
+}
+
+.loginSelect {
+  width: 180px;
+}
+
+.loginSubmit {
+  background-color: #4EC17C;
+  border: none;
+  color: white;
+  cursor: pointer;
+  outline: none;
+  padding: 10px;
+  width: 300px;
+  margin-top: 15px;
+  margin-bottom: 20px;
+}
+
+.loginSubmit:hover {
+  background-color: #F7B733;
+}
+
+.loginButtons {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  outline: none;
+}
+
+.loginButtons:hover {
+  font-style: oblique;
+}
+
+#loginSuccess {
+  border: 1px solid black;
+  padding: 20px;
+}
+
+#loginDirectory {
+  font-family: trebuchet MS;
+  letter-spacing: 0px;
+  text-transform: none;
+}
+
+/* Other Pages */
+
+.page {
+  margin: 5% 5%; /* top & bottom, left & right */
+}
+
+/* Navigation */
+
+.navbar	{
+	border-bottom: 2px solid #CB7A79;
+	color: white;
+	position: relative;
+	text-align: center;
+	width: 100%;
+}
+
+.navbar ul	{
+	list-style-type: none;
+	padding: 0;
+	}
+		
+.navbar ul li	{
+  border-left: 1px solid #CCCCCC;
+	display: inline;
+	padding-right: 10px;
+	}
+
+.navbutton {
+  background-color: transparent;
+  border: none;
+  font-size: 14px;
+  letter-spacing: 1px;
+  outline: none;
+  margin-right: 5px;
+  transition-duration: 0.4s;
+  -webkit-transition-duration: 0.4s;
+  -moz-transition-duration: 0.4s;
+  -o-transition-duration: 0.4s;
+  text-transform: lowercase;
+}
+
+.navbutton:hover {
+  color: #CB7A79;
+}
+
+/* Content */
+
+h2 {
+  background-color: #F7B733;
+  color: white;
+  letter-spacing: 2px;
+  margin-bottom: 15px;
+  padding: 5px;
+  text-align: right;
+  text-transform: uppercase;
+}
+
+.left {
+  float: left;
+  width: 47%;
+}
+
+.right {
+  border-left: 2px solid black;
+  float: right;
+  padding-left: 3%;
+  width: 47%;
+}
+
+/* Tables */
+
+.divider {
+  margin-bottom: 30px;
+}
+
+table	{
+	width: 100%;
+}
+
+table, th, td	{
+	text-align: center;
+}
+
+/* Tables as Headings */
+
+.tableheader {
+  border-collapse: collapse;
+  border-bottom: 1px solid #CCCCCC;
+}
+
+.tableheader td {
+  border: none;
+  padding-bottom: 15px;
+}
+
+.tabletitle {
+  color: #CB7A79;
+  letter-spacing: 1px;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: left;
+}
+
+.tablebutton {
+  font-size: 14px;
+  text-align: right;
+  outline: none;
+  width: 100px;
+}
+
+.tablebutton1 {
+  background-color: #4EC17C;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 10px;
+  width: 100px;
+}
+
+.tablebutton1:hover {
+  background-color: #F7B733;
+  transition-duration: 0.4s;
+  -webkit-transition-duration: 0.4s;
+  -moz-transition-duration: 0.4s;
+  -o-transition-duration: 0.4s;
+}
+
+.tablebutton1:disabled {
+  background-color: #CCCCCC;
+}
+
+.searchInput {
+  padding: 10px;
+  outline: none;
+  width: 100px;
+}
+
+/* Building Directory Table */
+
+.tablePadding {
+  border: 1px solid #CCCCCC;
+  padding: 20px;
+}
+
+.table {
+  border: none;
+  border-collapse: collapse;
+}
+
+.table td {
+  border-bottom: 1px solid #CCCCCC;
+  border-collapse: collapse;
+  padding: 10px;
+}
+
+.table tr:nth-child(odd) {
+  background-color: #FFFBF3;
+}
+
+.table tr:hover {
+  background-color: #F7F7F7;
+}
+
+.table th {
+  background-color: #FDE7BA;
+  border-bottom: 2px solid #CCCCCC;
+  padding: 10px;
+}
+
+.actionButtons {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 10px;
+  outline: none;
+  text-transform: uppercase;
+}
+
+.actionButtons:hover {
+  font-weight: bold;
+}
+
+.viewIcon, .editIcon, .deleteIcon {
+  height: 14px;
+  vertical-align: middle;
+}
+
+/* Add Forms */
+
+.addForms {
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+  width: 50%;
+}
+
+.forms th, .forms td {
+  height: 30px;
+  padding: 5px;
+}
+
+.forms th {
+  text-align: right;
+}
+
+.forms td {
+  text-align: left;
+}
+
+.formInput {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #CCCCCC;
+  outline: none;
+  padding: 5px;
+  width: 100%;
+}
+
+.formSelect {
+  width: 100%;
+}
+
+.formButton {
+  background-color: #4EC17C;
+  border: none;
+  color: white;
+  cursor: pointer;
+  outline: none;
+  padding: 10px;
+  width: 100px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.formButton:hover {
+  background-color: #F7B733;
+}
+
+/* Building Info Table */
+
+.tableheader2 {
+  border-collapse: collapse;
+  border-bottom: 1px solid #CCCCCC;
+  margin-bottom: 10px;
+}
+
+.tableheader2 td {
+  border: none;
+  padding-bottom: 10px;
+}
+
+.tabletitle1 {
+  font-weight: bold;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.tablebutton2 {
+  background-color: transparent;
+  border: none;
+  color: #F7B733;
+  cursor: pointer;
+  font-weight: bold;
+  outline: none;
+  padding: 0px;
+  text-transform: uppercase;
+}
+
+.tablebutton2:hover {
+  transition-duration: 0.4s;
+  -webkit-transition-duration: 0.4s;
+  -moz-transition-duration: 0.4s;
+  -o-transition-duration: 0.4s;
+  font-style: oblique;
+}
+
+.tablebutton2:disabled {
+  color: #CCCCCC;
+}
+
+.buildingInformation th, .buildingInformation td {
+  text-align: left;
+}
+
+/* COMMENT */
+
+.commentDiv {
+  margin-top: 50px;
+  padding: 20px;
+}
+
+/* EDIT INPUT */
+
+.editInput {
+  background: transparent;
+  border: 1px solid #CCCCCC;
+  outline: none;
+  width: 100%;
+}
+
+/* FEEDBACK */
+
+textarea {
+  outline: none;
+  width: 100%;
+}
